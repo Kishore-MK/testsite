@@ -14,8 +14,9 @@ datasource db {
 }
 
 model User {
+  id String @id @map("_id") @default(cuid())
   name String 
-  email String @id @map("_id")
+  email String @unique
   password String
   stage Int @default(0)
   role String @default("user")

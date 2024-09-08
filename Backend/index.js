@@ -14,10 +14,40 @@ mongoose.connect(
 
 
 app.get("/api/getusers", async (req, res) => {
-  const { email } = req.body;
-  const data=await prisma.user.findFirst({where:{email:email}});
-  console.log(data)
+  const users = await prisma.user.findMany()
+  console.log(users);
+  
+  return res.status(200).json(users)
 });
+
+app.put("/api/updateUser", async (req, res) => {
+  const { Useremail, stage } = req.body;
+
+  try {
+    console.log(`Updating user with email: ${Useremail}`);
+
+    const existingUser = await prisma.user.findFirst({
+      where: { email: Useremail },
+    });
+
+    if (!existingUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const updatedUser = await prisma.user.update({
+      where: { email: Useremail },
+      data: { stage },
+    });
+
+    console.log("User updated:", updatedUser);
+
+    return res.status(200).json(updatedUser);
+  } catch (error) {
+    console.error("Error updating user:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 
 app.post("/api/signup", async (req, res) => {
   console.log("Sigining..",req.body);

@@ -8,7 +8,6 @@ function SignInForm() {
     e.preventDefault();
     try{
       console.log("Logginnng");
-      
       const data = await fetch("http://localhost:3008/api/Login",{method: "POST",
       body: JSON.stringify({
         Useremail:email,
@@ -18,7 +17,6 @@ function SignInForm() {
         "Content-type": "application/json"
       }
     });
-    console.log(data);
     
     }
     catch(e){
