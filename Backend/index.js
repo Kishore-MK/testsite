@@ -1,17 +1,11 @@
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
-const User = require('./Models/Users');
 const express = require('express');
 const cors = require('cors');
-const mongoose = require('mongoose');
 const app = express();
 app.use(express.json());
 app.use(cors());
 app.listen(3008)
-mongoose.connect(
-  "mongodb+srv://thenagarajanv:gdsckce2024@gdsckce.axz22.mongodb.net/Gdsckce?retryWrites=true&w=majority&appName=Gdsckce"
-).then(console.log("connected db"));
-
 
 app.get("/api/getusers", async (req, res) => {
   const users = await prisma.user.findMany()
@@ -59,9 +53,9 @@ app.post("/api/signup", async (req, res) => {
       where: { email: Useremail },
     });
 
-    if (existingUser) {
-      return res.status(400).json({ message: "User already exists" });
-    }
+    // if (existingUser) {
+    //   return res.status(400).json({ message: "User already exists" });
+    // }
 
     const newUser = await prisma.user.create({
       data: {

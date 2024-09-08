@@ -14,12 +14,12 @@ datasource db {
 }
 
 model User {
-  id String @id @map("_id") @default(cuid())
-  name String 
-  email String @unique
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  name     String
+  email    String @unique
   password String
-  stage Int @default(0)
-  role String @default("user")
-  @@map("users")
-}
+  stage    Int    @default(0)
+  role     String @default("user")
 
+  @@map("users") 
+}
