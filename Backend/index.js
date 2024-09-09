@@ -47,21 +47,21 @@ app.post("/api/signup", async (req, res) => {
   console.log("Sigining..",req.body);
   
   try {
-    const { Username, Useremail, Userpassword } = req.body;
+    const { rollnumber, email, password } = req.body;
 
     const existingUser = await prisma.user.findFirst({
-      where: { email: Useremail },
+      where: { email: email },
     });
 
-    // if (existingUser) {
-    //   return res.status(400).json({ message: "User already exists" });
-    // }
+    if (existingUser) {
+      return res.status(400).json({ message: "User already exists" });
+    }
 
     const newUser = await prisma.user.create({
       data: {
-        name: Username,
-        email: Useremail,
-        password: Userpassword, 
+        name: rollnumber,
+        email: email,
+        password: password, 
       },
     });
 

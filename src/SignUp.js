@@ -1,81 +1,64 @@
-import React from "react";
-function SignUpForm() {
-  const [state, setState] = React.useState({
-    name: "",
-    email: "",
-    password: ""
-  });
-  const handleChange = evt => {
-    const value = evt.target.value;
-    setState({
-      ...state,
-      [evt.target.name]: value
-    });
-  };
+import React, { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
-  const handleOnSubmit = async (evt) => {
-    evt.preventDefault();
-    console.log("hii");
-    
+function SignUpForm() {
+  const [rollnumber, setRollNumber] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const history = useNavigate();
+  
+  async function submit(e) {
+    e.preventDefault();
     try{
-      const request = await fetch("http://localhost:3008/api/Signup",{method: "POST",
-      body: JSON.stringify({
-        Username: state.name,
-        Useremail: state.email,
-        Userpassword: state.password
-      }),
-      headers: {
-        "Content-type": "application/json"
-      }
-    });
-    console.log(request);
-    
-    }
-    catch(e){
+      await axios.post("http://localhost:3008/api/signup",{
+        rollnumber,email, password
+      })
+      .then(res =>{
+        console.log(res);
+        
+        if(res.status !== 201){
+          alert("User already exist")
+        }else{
+          history("/ApplicationStatus",{state:{id:email}})
+        }
+      })
+      .catch(e=>{
+        alert("Wrong details")
+        console.log(e);
+      })
+    }catch{
       console.log(e);
       
     }
-    
-    // alert(
-    //   `You are sign up with name: ${name} email: ${email} and password: ${password}`
-    // );
-    // await fetch("http://localhost:3008/");
-
-    for (const key in state) {
-      setState({
-        ...state,
-        [key]: ""
-      });
-    }
-  };
-
+  }
   return (
     <div className="form-container sign-up-container">
-      <form onSubmit={handleOnSubmit}>
+      <form action="POST">
         <h1>Create Account</h1>
         <span>Use your email for registration</span>
         <input
           type="text"
-          name="name"
-          value={state.name}
-          onChange={handleChange}
-          placeholder="Name"
+          name="rollnumber"
+          value={rollnumber}
+          onChange={(e) => {setRollNumber(e.target.value)}}
+          placeholder="Roll Number"
         />
         <input
           type="email"
           name="email"
-          value={state.email}
-          onChange={handleChange}
+          value={email}
+          onChange={(e) => {setEmail(e.target.value)}}
           placeholder="Email"
         />
         <input
           type="password"
           name="password"
-          value={state.password}
-          onChange={handleChange}
+          value={password}
+          onChange={(e) => {setPassword(e.target.value)}}
           placeholder="Password"
         />
-        <button type="submit">Sign Up</button>
+        <button type="submit" onClick={submit}>Sign Up</button>
       </form>
     </div>
   );
